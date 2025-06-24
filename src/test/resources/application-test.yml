@@ -1,0 +1,17 @@
+spring:
+  main:
+    banner-mode: off
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    com.example.colorfullogging: DEBUG
+    org.springframework: WARN
+    org.springframework.boot: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %msg%n"
+
+server:
+  port: 0

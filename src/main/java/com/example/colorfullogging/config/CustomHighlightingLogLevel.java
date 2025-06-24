@@ -9,10 +9,13 @@ import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase;
  * Custom converter for colorizing log levels in console output
  */
 public class CustomHighlightingLogLevel extends ForegroundCompositeConverterBase<ILoggingEvent> {
-    
+
     @Override
     protected String getForegroundColorCode(ILoggingEvent event) {
         Level level = event.getLevel();
+        if (level == null) {
+            return ANSIConstants.DEFAULT_FG;
+        }
         switch (level.toInt()) {
             case Level.ERROR_INT:
                 return ANSIConstants.RED_FG;
