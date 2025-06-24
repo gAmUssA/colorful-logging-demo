@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: colorful-logging-demo
+
+logging:
+  level:
+    com.example.colorfullogging: DEBUG
+    org.springframework: INFO
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%customHighlightingLogLevel(%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level) %customHighlightingPackageName([%thread] %logger{36}): %customHighlightingMessage(%msg%n)"
+  file:
+    name: logs/colorful-logging-demo.log
