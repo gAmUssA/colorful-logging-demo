@@ -8,10 +8,10 @@
     <conversionRule conversionWord="customHighlightingMessage" 
                    converterClass="com.example.colorfullogging.config.CustomHighlightingMessage" />
 
-    <!-- Console appender with colorful output -->
+    <!-- Console appender with colorful output - optimized for efficiency -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%customHighlightingLogLevel(%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level) %customHighlightingPackageName([%thread] %logger{36}.%M\(%line\)): %customHighlightingMessage(%msg%n)</pattern>
+            <pattern>%customHighlightingLogLevel(%d{HH:mm:ss.SSS} %-5level) %customHighlightingPackageName(%logger{20}): %customHighlightingMessage(%msg%n)</pattern>
         </encoder>
     </appender>
 
@@ -26,18 +26,18 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}.%M\(%line\): %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{20}: %msg%n</pattern>
         </encoder>
     </appender>
 
     <!-- Application logger -->
-    <logger name="com.example.colorfullogging" level="DEBUG">
+    <logger name="com.example.colorfullogging" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </logger>
 
     <!-- Spring framework logger -->
-    <logger name="org.springframework" level="INFO">
+    <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </logger>
