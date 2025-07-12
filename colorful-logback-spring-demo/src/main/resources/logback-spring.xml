@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Include Spring Boot's default configurations for best practices -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <!-- Define custom conversion rules for colorful logging -->
+    <conversionRule conversionWord="colorLevel" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingLogLevel" />
+    <conversionRule conversionWord="colorPackage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingPackageName" />
+    <conversionRule conversionWord="colorMessage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingMessage" />
+
+    <!-- Console appender with colorful output for development -->
+    <!-- Console appender with colorful output -->
+    <appender name="COLORFUL_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%colorLevel(%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level) %colorPackage([%thread] %logger{36}.%M\(%line\)): %colorMessage(%msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File appender with rolling policy for production -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/spring-demo.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/spring-demo.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Async appender for production performance -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+        <queueSize>256</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
+
+    <!-- Development profile - colorful console output -->
+    <springProfile name="!prod">
+        <!-- Application logging with debug level -->
+        <logger name="dev.gamov.colorfullogback.demo" level="DEBUG" additivity="false">
+            <appender-ref ref="COLORFUL_CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+        
+        <!-- Spring framework - keep it simple -->
+        <logger name="org.springframework" level="INFO"/>
+        
+        <!-- Root logger for development -->
+        <root level="INFO">
+            <appender-ref ref="COLORFUL_CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- Production profile - file logging only -->
+    <springProfile name="prod">
+        <!-- Application logging -->
+        <logger name="dev.gamov.colorfullogback.demo" level="INFO" additivity="false">
+            <appender-ref ref="ASYNC_FILE"/>
+        </logger>
+        
+        <!-- Spring framework -->
+        <logger name="org.springframework" level="WARN"/>
+        
+        <!-- Root logger for production -->
+        <root level="WARN">
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+    </springProfile>
+</configuration>

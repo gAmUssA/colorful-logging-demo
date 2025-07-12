@@ -1,146 +1,359 @@
-# 🎨 Colorful Logging Demo - Spring Boot
+# Colorful Logback - Multimodule Project
 
-This Spring Boot application demonstrates how to implement colorful logging using Logback with custom converters, based on the Medium article by AJawhar.
-
-## 🌈 Features
-
-- **Colorful Console Logging**: Different log levels appear in different colors
-  - 🔴 **ERROR**: Red
-  - 🟡 **WARN**: Yellow  
-  - 🟢 **INFO**: Green
-  - 🔵 **DEBUG**: Blue
-  - 🟣 **TRACE**: Magenta
-- **Custom Converters**: Separate color customization for log levels, package names, and messages
-- **File Logging**: Plain text logging to files without colors
-- **REST API**: Endpoints to demonstrate different logging levels
-- **Emoji Support**: Enhanced readability with emojis in log messages
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Java 17 or higher
-- Maven 3.6+
-
-### Running the Application
-
-```bash
-# Navigate to project directory
-cd colorful-logging-demo
-
-# Run with Maven
-mvn spring-boot:run
-
-# Or build and run JAR
-mvn clean package
-java -jar target/colorful-logging-demo-1.0.0.jar
-```
-
-## 🔗 API Endpoints
-
-Once the application is running, visit these endpoints:
-
-- **Demo All Levels**: `GET http://localhost:8080/api/logging/demo`
-- **Error Only**: `GET http://localhost:8080/api/logging/demo?level=error`
-- **Warning Only**: `GET http://localhost:8080/api/logging/demo?level=warn`
-- **Info Only**: `GET http://localhost:8080/api/logging/demo?level=info`
-- **Debug Only**: `GET http://localhost:8080/api/logging/demo?level=debug`
-- **Trace Only**: `GET http://localhost:8080/api/logging/demo?level=trace`
-- **Health Check**: `GET http://localhost:8080/api/logging/health`
+A multimodule Maven project that provides a lightweight Java library for adding beautiful colors to your logback console output, along with a Spring Boot demo application.
 
 ## 🏗️ Project Structure
 
-```
-src/main/java/com/example/colorfullogging/
-├── ColorfulLoggingDemoApplication.java    # Main application class
-├── config/
-│   ├── CustomHighlightingLogLevel.java    # Log level colorizer
-│   ├── CustomHighlightingMessage.java     # Message colorizer
-│   └── CustomHighlightingPackageName.java # Package name colorizer
-├── controller/
-│   └── LoggingDemoController.java         # REST endpoints
-└── service/
-    └── LoggingService.java                # Startup logging demo
-
-src/main/resources/
-├── logback-spring.xml                     # Logback configuration
-└── application.yml                        # Spring Boot configuration
-```
-
-## ⚙️ Configuration
-
-### Logback Configuration (`logback-spring.xml`)
-
-The configuration defines:
-- Custom conversion rules for colorful output
-- Console appender with colors
-- File appender without colors (plain text)
-- Different loggers for application and framework
-
-### Custom Converters
-
-Three custom converter classes extend `ForegroundCompositeConverterBase`:
-
-1. **CustomHighlightingLogLevel**: Colors the log level (ERROR, WARN, etc.)
-2. **CustomHighlightingMessage**: Colors the actual log message
-3. **CustomHighlightingPackageName**: Colors the package/class name
-
-## 🎯 Key Implementation Details
-
-### Color Mapping
-- Uses Logback's `ANSIConstants` for color codes
-- Each log level maps to a specific color
-- Package names use cyan for better readability
-
-### Pattern Format
-```
-%customHighlightingLogLevel(%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level) 
-%customHighlightingPackageName([%thread] %logger{36}.%M\(%line\)): 
-%customHighlightingMessage(%msg%n)
-```
-
-## 📝 Log Output Examples
-
-When you run the application, you'll see colorful output like:
+This project is organized as a multimodule Maven project:
 
 ```
-2024-06-24 06:24:00.123 INFO  [main] c.e.c.service.LoggingService: 🎨 Colorful Logging Demo Application Started!
-2024-06-24 06:24:00.124 ERROR [http-nio-8080-exec-1] c.e.c.controller.LoggingDemoController: 🔴 This is an ERROR message
-2024-06-24 06:24:00.125 WARN  [http-nio-8080-exec-1] c.e.c.controller.LoggingDemoController: 🟡 This is a WARNING message
-2024-06-24 06:24:00.126 INFO  [http-nio-8080-exec-1] c.e.c.controller.LoggingDemoController: 🟢 This is an INFO message
+colorful-logback-parent/
+├── colorful-logback/              # The core library
+├── colorful-logback-spring-demo/  # Spring Boot demo application
+├── pom.xml                        # Parent POM
+├── jitpack.yml                    # JitPack configuration
+└── README.md                      # This file
 ```
 
-## 🛠️ Customization
+## 📦 Modules
 
-To customize colors, modify the converter classes:
+### 1. Colorful Logback Library (`colorful-logback`)
 
-```java
-@Override
-protected String getForegroundColorCode(ILoggingEvent event) {
-    Level level = event.getLevel();
-    switch (level.toInt()) {
-        case Level.ERROR_INT:
-            return ANSIConstants.RED_FG;        // Change to your preferred color
-        case Level.WARN_INT:
-            return ANSIConstants.YELLOW_FG;     // Change to your preferred color
-        // ... other levels
+The core library that provides colorful logging functionality for any Java project using logback.
+
+**Features:**
+- 🎨 **Colorful Console Output**: Different colors for different log levels
+- 🚀 **Framework Independent**: Works with any Java project using logback
+- 🔧 **Easy Integration**: Simple configuration with logback.xml
+- 📦 **Lightweight**: Minimal dependencies (only logback)
+- ⚡ **High Performance**: Optimized for efficiency
+
+**Color Scheme:**
+- **ERROR**: Red
+- **WARN**: Yellow  
+- **INFO**: Green
+- **DEBUG**: Blue
+- **TRACE**: Magenta
+- **Package Names**: Cyan (for INFO, DEBUG, TRACE), Red/Yellow (for ERROR/WARN)
+
+### 2. Spring Boot Demo (`colorful-logback-spring-demo`)
+
+A complete Spring Boot application demonstrating how to use the colorful logback library in a real-world scenario.
+
+**Features:**
+- 🌐 REST API endpoints for testing colorful logging
+- 🔧 Service layer with business logic demonstrations
+- 📊 Actuator endpoints for monitoring
+- 🎯 Profile-based logging configuration
+- 📝 Comprehensive logging examples
+
+## 🚀 Quick Start
+
+### Using the Library via JitPack
+
+#### Maven
+
+Add the JitPack repository to your `pom.xml`:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+Add the dependency:
+
+```xml
+<dependency>
+    <groupId>com.github.vikgamov.colorful-logging-demo</groupId>
+    <artifactId>colorful-logback</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+#### Gradle
+
+Add the JitPack repository to your `build.gradle`:
+
+```gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
     }
 }
 ```
 
-Available colors in `ANSIConstants`:
-- `RED_FG`, `GREEN_FG`, `YELLOW_FG`, `BLUE_FG`, `MAGENTA_FG`, `CYAN_FG`
-- `BOLD`, `DEFAULT_FG`
+Add the dependency:
 
-## 📚 References
+```gradle
+dependencies {
+    implementation 'com.github.vikgamov.colorful-logging-demo:colorful-logback:1.0.0'
+}
+```
 
-- [Original Medium Article](https://medium.com/@alaajawhar123/colorful-logging-in-spring-da2722bc08d1)
-- [Logback Documentation](http://logback.qos.ch/manual/)
-- [Spring Boot Logging](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.logging)
+### Configuration
 
-## 🤝 Contributing
+Create or update your `logback.xml` file in `src/main/resources/`:
 
-Feel free to submit issues and enhancement requests!
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Define custom conversion rules for colorful logging -->
+    <conversionRule conversionWord="colorLevel" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingLogLevel" />
+    <conversionRule conversionWord="colorPackage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingPackageName" />
+    <conversionRule conversionWord="colorMessage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingMessage" />
+
+    <!-- Console appender with colorful output -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%colorLevel(%d{HH:mm:ss.SSS} %-5level) %colorPackage(%logger{20}): %colorMessage(%msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger with colorful console output -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
+```
+
+### Java Code Example
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MyApplication {
+    private static final Logger logger = LoggerFactory.getLogger(MyApplication.class);
+    
+    public static void main(String[] args) {
+        logger.trace("🟣 This is a TRACE message - appears in MAGENTA");
+        logger.debug("🔵 This is a DEBUG message - appears in BLUE");
+        logger.info("🟢 This is an INFO message - appears in GREEN");
+        logger.warn("🟡 This is a WARNING message - appears in YELLOW");
+        logger.error("🔴 This is an ERROR message - appears in RED");
+    }
+}
+```
+
+## 🏃‍♂️ Running the Demo
+
+### Prerequisites
+
+- Java 17 or higher
+- Maven 3.6 or higher
+
+### Build the Project
+
+```bash
+git clone https://github.com/vikgamov/colorful-logging-demo.git
+cd colorful-logging-demo
+mvn clean install
+```
+
+### Run the Spring Boot Demo
+
+```bash
+cd colorful-logback-spring-demo
+mvn spring-boot:run
+```
+
+The application will start on `http://localhost:8080`
+
+### Demo Endpoints
+
+- **GET** `/demo` - Demonstrate colorful logging in business operations
+- **POST** `/demo/simulate-error` - Simulate error scenarios with colorful logging
+- **GET** `/demo/levels` - Demonstrate all log levels with colors
+- **GET** `/actuator/health` - Health check endpoint
+
+### Example Usage
+
+```bash
+# Test basic logging demonstration
+curl http://localhost:8080/demo
+
+# Test all log levels
+curl http://localhost:8080/demo/levels
+
+# Test error simulation
+curl -X POST http://localhost:8080/demo/simulate-error
+
+# Check application health
+curl http://localhost:8080/actuator/health
+```
+
+## 🔧 Advanced Configuration
+
+### Spring Boot with Profiles
+
+For Spring Boot applications, use `logback-spring.xml` for profile-specific configurations:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Define custom conversion rules -->
+    <conversionRule conversionWord="colorLevel" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingLogLevel" />
+    <conversionRule conversionWord="colorPackage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingPackageName" />
+    <conversionRule conversionWord="colorMessage" 
+                   converterClass="dev.gamov.colorfullogback.CustomHighlightingMessage" />
+
+    <!-- Development profile - colorful console output -->
+    <springProfile name="!prod">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%colorLevel(%d{HH:mm:ss.SSS} %-5level) [%thread] %colorPackage(%logger{36}): %colorMessage(%msg%n)</pattern>
+            </encoder>
+        </appender>
+        
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <!-- Production profile - file logging only -->
+    <springProfile name="prod">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>logs/application.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36}: %msg%n</pattern>
+            </encoder>
+        </appender>
+        
+        <root level="WARN">
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+</configuration>
+```
+
+### Custom Color Converters
+
+You can extend the base converter classes to create your own color schemes:
+
+```java
+package dev.gamov.colorfullogback;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.core.pattern.color.ANSIConstants;
+
+public class MyCustomColorConverter extends BaseColorConverter {
+    @Override
+    protected String getColorForLevel(Level level) {
+        switch (level.toInt()) {
+            case Level.ERROR_INT:
+                return ANSIConstants.BOLD + ANSIConstants.RED_FG;
+            case Level.WARN_INT:
+                return ANSIConstants.BOLD + ANSIConstants.YELLOW_FG;
+            // ... customize other levels
+            default:
+                return ANSIConstants.DEFAULT_FG;
+        }
+    }
+}
+```
+
+## 📚 Available Conversion Words
+
+- `%colorLevel(...)`: Colors the content based on log level
+- `%colorPackage(...)`: Colors package names with level-specific colors
+- `%colorMessage(...)`: Colors log messages based on log level
+
+## 🔄 Development
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/vikgamov/colorful-logging-demo.git
+cd colorful-logging-demo
+
+# Build all modules
+mvn clean compile
+
+# Run tests
+mvn test
+
+# Install to local repository
+mvn install
+
+# Run the Spring Boot demo
+cd colorful-logback-spring-demo
+mvn spring-boot:run
+```
+
+### Module Dependencies
+
+The Spring Boot demo depends on the library module:
+
+```xml
+<dependency>
+    <groupId>dev.gamov</groupId>
+    <artifactId>colorful-logback</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+## 📋 Requirements
+
+- Java 17 or higher
+- Logback Classic (managed by Spring Boot BOM)
+- SLF4J API (included with Logback Classic)
+
+## 🔗 Compatibility
+
+This library is compatible with:
+- ✅ Plain Java applications
+- ✅ Spring Boot applications
+- ✅ Spring Framework applications
+- ✅ Any Java framework using logback
+- ✅ Maven and Gradle projects
+
+## 🚀 Performance
+
+The library is designed for high performance:
+- Minimal overhead on logging operations
+- Efficient color code generation
+- No reflection or heavy computations during logging
+- Provided scope for logback dependency to avoid version conflicts
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📞 Support
+
+If you encounter any issues or have questions, please open an issue on the project repository.
+
+## 🏷️ Versioning
+
+This project uses [JitPack](https://jitpack.io) for publishing. To use a specific version:
+
+- **Latest Release**: Use the latest tag (e.g., `1.0.0`)
+- **Latest Commit**: Use `main-SNAPSHOT`
+- **Specific Commit**: Use the commit hash
+
+Example with specific version:
+```xml
+<dependency>
+    <groupId>com.github.vikgamov.colorful-logging-demo</groupId>
+    <artifactId>colorful-logback</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
