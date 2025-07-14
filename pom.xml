@@ -20,7 +20,7 @@
         <logback.version>1.4.14</logback.version>
         <junit.version>5.13.3</junit.version>
         <spring.boot.version>3.5.3</spring.boot.version>
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.6.3</maven.javadoc.plugin.version>
